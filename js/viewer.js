@@ -64,18 +64,27 @@ function displayEntity(file, id) {
             }
             htmlContent += '</ul>';
 
-            // If viewing a Book, display borrowing details
+            // If viewing a Book, display genre and borrowing details
             if (entityType === 'Book') {
+                // Display Genre
+                const genreElement = entity.getElementsByTagName('Genre')[0];
+                if (genreElement) {
+                    const genreHref = genreElement.getAttribute('xlink:href');
+                    const genreId = genreHref.split('#')[1];
+                    const genreName = genres[genreId] || 'Unknown'; // Lookup genre name
+                    htmlContent += `<h2>Genre</h2><p>${genreName}</p>`;
+                }
+
                 // Retrieve borrowing data from LocalStorage
                 const borrowingData = JSON.parse(localStorage.getItem('borrowingData')) || {};
                 const borrowingDetails = borrowingData[id];
 
                 if (borrowingDetails) {
                     htmlContent += `<h2>Borrowing Details</h2><ul>
-                        <li><strong>Borrower:</strong> ${borrowingDetails.borrowerName}</li>
-                        <li><strong>Borrow Date:</strong> ${borrowingDetails.borrowDate}</li>
-                        <li><strong>Return Date:</strong> ${borrowingDetails.returnDate}</li>
-                    </ul>`;
+            <li><strong>Borrower:</strong> ${borrowingDetails.borrowerName}</li>
+            <li><strong>Borrow Date:</strong> ${borrowingDetails.borrowDate}</li>
+            <li><strong>Return Date:</strong> ${borrowingDetails.returnDate}</li>
+        </ul>`;
                 } else {
                     htmlContent += `<p>This book is currently available for borrowing.</p>`;
                 }
